@@ -1,0 +1,130 @@
+#!/usr/bin/python3
+import sys
+import math
+
+def isfloat(num):
+    try:
+        float(num)
+        return True
+    except:
+        return False
+
+def matrix_calculations(prin_matrix, added_matrix):
+    matrix = ([[0.00, 0.00, 0.00],
+               [0.00, 0.00, 0.00],
+               [0.00, 0.00, 0.00]])
+    matrix[0][0] = (prin_matrix[0][0] * added_matrix[0][0]) + (prin_matrix[0][1] * added_matrix[1][0]) + (prin_matrix[0][2] * added_matrix[2][0])
+    matrix[0][1] = (prin_matrix[0][0] * added_matrix[0][1]) + (prin_matrix[0][1] * added_matrix[1][1]) + (prin_matrix[0][2] * added_matrix[2][1])
+    matrix[0][2] = (prin_matrix[0][0] * added_matrix[0][2]) + (prin_matrix[0][1] * added_matrix[1][2]) + (prin_matrix[0][2] * added_matrix[2][2])
+    matrix[1][0] = (prin_matrix[1][0] * added_matrix[0][0]) + (prin_matrix[1][1] * added_matrix[1][0]) + (prin_matrix[1][2] * added_matrix[2][0])
+    matrix[1][1] = (prin_matrix[1][0] * added_matrix[0][1]) + (prin_matrix[1][1] * added_matrix[1][1]) + (prin_matrix[1][2] * added_matrix[2][1])
+    matrix[1][2] = (prin_matrix[1][0] * added_matrix[0][2]) + (prin_matrix[1][1] * added_matrix[1][2]) + (prin_matrix[1][2] * added_matrix[2][2])
+    matrix[2][0] = (prin_matrix[2][0] * added_matrix[0][0]) + (prin_matrix[2][1] * added_matrix[1][0]) + (prin_matrix[2][2] * added_matrix[2][0])
+    matrix[2][1] = (prin_matrix[2][0] * added_matrix[0][1]) + (prin_matrix[2][1] * added_matrix[1][1]) + (prin_matrix[2][2] * added_matrix[2][1])
+    matrix[2][2] = (prin_matrix[2][0] * added_matrix[0][2]) + (prin_matrix[2][1] * added_matrix[1][2]) + (prin_matrix[2][2] * added_matrix[2][2])
+    return (matrix)
+
+def matrix_cal(prin_matrix, x, y):
+    matrix = ([[1.00],
+               [1.00],
+               [1.00]])
+    matrix[0][0] = prin_matrix[0][0] * x + prin_matrix[0][1] * y + prin_matrix[0][2] * 1
+    matrix[1][0] = prin_matrix[1][0] * x + prin_matrix[1][1] * y + prin_matrix[1][2] * 1
+    matrix[2][0] = prin_matrix[2][0] * x + prin_matrix[2][1] * y + prin_matrix[2][2] * 1
+    return (matrix)
+
+def print_everything(prin_matrix, x, y, new_matrix):
+    print(f"{prin_matrix[0][0]:.2f}\t{prin_matrix[0][1]:.2f}\t{prin_matrix[0][2]:.2f}")
+    print(f"{prin_matrix[1][0]:.2f}\t{prin_matrix[1][1]:.2f}\t{prin_matrix[1][2]:.2f}")
+    print(f"{prin_matrix[2][0]:.2f}\t{prin_matrix[2][1]:.2f}\t{prin_matrix[2][2]:.2f}")
+    print(f"({x:.2f}, {y:.2f}) => ({new_matrix[0][0]:.2f}, {new_matrix[1][0]:.2f})")
+
+def main():
+    if (sys.argv[1] == "-h"):
+        print("USAGE")
+        print("    ./102architech x y transfo1 arg11 [arg12] [transfo2 arg21 [arg22]] ...\n")
+        print("DESCRIPTION\n    x    abscissa of the original point")
+        print("    y    ordinate of the original point\n")
+        print("    transfo arg1 [arg2]")
+        print("    -t i j  translation along vector (i, j)")
+        print("    -z m n  scaling by factors m (x-axis) and n (y-axis)")
+        print("    -r d    rotation centered in O by a d degree angle")
+        print("    -s d    reflection over the axis passing trough O with an inclination")
+        print("            angle of d degrees")
+
+    x1= sys.argv[1]
+    y1= sys.argv[2]
+
+    x1 = float(x1)
+    y1 = float(y1)
+
+    prin_matrix = ([
+        [1.00, 0.00, 0.00],
+        [0.00, 1.00, 0.00],
+        [0.00, 0.00, 1.00]])
+    matrix_translation = ([
+        [1.00, 0.00, 0.00],
+        [0.00, 1.00, 0.00],
+        [0.00, 0.00, 1.00]])
+    matrix_scale = ([
+        [1.00, 0.00, 0.00],
+        [0.00, 1.00, 0.00],
+        [0.00, 0.00, 1.00]])
+    matrix_rotation = ([
+        [1.00, 0.00, 0.00],
+        [0.00, 1.00, 0.00],
+        [0.00, 0.00, 1.00]])
+    matrix_reflexion = ([
+        [1.00, 0.00, 0.00],
+        [0.00, 1.00, 0.00],
+        [0.00, 0.00, 1.00]])
+    i = 3
+    while i < len(sys.argv):
+        if (sys.argv[i] == "-t" and isfloat(sys.argv[i + 1]) == True and isfloat(sys.argv[i + 2]) == True):
+            matrix_translation[0][2] = float(sys.argv[i+1])
+            matrix_translation[1][2] = float(sys.argv[i+2])
+            prin_matrix = matrix_calculations(matrix_translation, prin_matrix)
+            i = i + 3
+            continue
+        if (sys.argv[i] == "-z" and isfloat(sys.argv[i + 1]) == True and isfloat(sys.argv[i + 2]) == True):
+            matrix_scale[0][0] = float(sys.argv[i+1])
+            matrix_scale[1][1] = float(sys.argv[i+2])
+            prin_matrix = matrix_calculations(matrix_scale, prin_matrix)
+            i = i + 3
+            continue
+        if (sys.argv[i] == "-r" and isfloat(sys.argv[i + 1]) == True):
+            matrix_rotation[0][0] = math.cos(math.radians(float(sys.argv[i+1])))
+            matrix_rotation[0][1] = -(math.sin(math.radians(float(sys.argv[i+1]))))
+            matrix_rotation[1][0] = math.sin(math.radians(float(sys.argv[i+1])))
+            matrix_rotation[1][1] = math.cos(math.radians(float(sys.argv[i+1])))
+            prin_matrix = matrix_calculations(matrix_rotation, prin_matrix)
+            i = i + 2
+            continue
+        if (sys.argv[i] == "-s" and isfloat(sys.argv[i + 1]) == True):
+            matrix_reflexion[0][0] = math.cos(2 * (math.radians(float(sys.argv[i+1]))))
+            matrix_reflexion[0][1] = math.sin(2 * (math.radians(float(sys.argv[i+1]))))
+            matrix_reflexion[1][0] = math.sin(2 * (math.radians(float(sys.argv[i+1]))))
+            matrix_reflexion[1][1] = -(math.cos(2 * (math.radians(float(sys.argv[i+1])))))
+            prin_matrix = matrix_calculations(matrix_reflexion, prin_matrix)
+            i = i + 2
+        else:
+            exit(84)
+    cont = 1
+    while cont < len(sys.argv):
+        if (sys.argv[cont] == "-t" and isfloat(sys.argv[cont + 1]) == True and isfloat(sys.argv[cont + 2]) == True):
+            print(f"Translation along vector ({sys.argv[cont + 1]}, {sys.argv[cont + 2]})")
+        if (sys.argv[cont] == "-z" and isfloat(sys.argv[cont + 1]) == True and isfloat(sys.argv[cont + 2]) == True):
+            print("Scaling by factors", sys.argv[cont + 1], "and", sys.argv[cont + 2])
+        if (sys.argv[cont] == "-r" and isfloat(sys.argv[cont + 1]) == True):
+            print("Rotation by a", sys.argv[cont + 1], "degree angle")
+        if (sys.argv[cont] == "-s" and isfloat(sys.argv[cont + 1]) == True):
+            print("Reflection over an axis with an inclination angle of", sys.argv[cont + 1], "degrees")
+        cont = cont + 1
+    result = matrix_cal(prin_matrix, x1, y1)
+    print_everything(prin_matrix, x1, y1, result)
+
+if __name__ == "__main__":
+    try:
+        main()
+    except:
+        exit(84)
